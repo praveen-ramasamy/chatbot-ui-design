@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Design</title>
+
+    <!-- FontAwsome CDN for Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .message {
+            clear: both;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .message-content {
+            display: inline-block;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border-radius: 10px;
+            padding: 8px 12px;
+            max-width: 80%;
+        }
+
+        .sender .message-content {
+            float: right;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .receiver .message-content {
+            float: left;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            animation: upDown 1s infinite alternate;
+        }
+
+        .chatbot-modal {
+            display: none;
+            z-index: 9999;
+            overflow-y: auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 10px;
+        }
+
+        @media screen and (max-width: 767px) {
+            .chatbot-modal {
+                width: 90%;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            .chatbot-modal {
+                width: 30%;
+            }
+        }
+
+        .pop-up-content {
+            padding: 8px;
+            padding-right: 0;
+        }
+
+        .pop-custom-header {
+            border-bottom: 1px solid #ddd;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .pop-custom-header h3 {
+            float: left;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            padding-right: 10px;
+            background-color: white;
+            border: none;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .pop-custom-body {
+            padding: 10px;
+            max-height: calc(80vh - 100px);
+            overflow-y: auto;
+        }
+
+        .pop-custom-footer {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        @keyframes upDown {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(10px);
+            }
+        }
+
+        .pop-custom-footer {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .input-group {
+            display: flex;
+        }
+
+        .form-control {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 16px;
+        }
+
+        #sendMessageBtn {
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #sendMessageBtn:hover {
+            background-color: #0056b3;
+        }
+
+        #closeModal {
+            margin-left: auto;
+        }
+
+        .promotion {
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .promotion a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .promotion a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="chatbot" id="chatbotIcon">
+        <i class="fa-solid fa-robot" style="font-size: xx-large;vertical-align: bottom;"></i>
+    </div>
+
+    <!-- Chatbot and modal code -->
+    <div class="chatbot-modal" id="customModal">
+        <div class="pop-up-content">
+            <div class="pop-custom-header">
+                <h3 class="modal-title" id="customModalLabel">Chatbot</h3>
+                <button type="button" class="close" id="closeModal">&times;</button>
+            </div>
+            <div class="pop-custom-body" id="chatbox">
+                <div class="message sender">
+                    <div class="message-content">
+                        <span>Hello!</span>
+                    </div>
+                </div>
+                <div class="message receiver">
+                    <div class="message-content">
+                        <span>Hi there!</span>
+                    </div>
+                </div>
+                <div class="message receiver">
+                    <div class="message-content">
+                        <span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum accusamus totam reiciendis
+                            quam, ullam perferendis perspiciatis, tenetur odit odio impedit voluptatum fugit tempore
+                            dolore
+                            dolores quasi magni pariatur commodi maiores?</span>
+                    </div>
+                </div>
+            </div>
+            <div class="pop-custom-footer">
+                <div class="input-group" style="padding-right: 10px;">
+                    <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
+                    <button class="btn btn-primary" id="sendMessageBtn">Send</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotion Section -->
+    <div class="promotion">
+        <h4>If you like this project, support me!</h4>
+        <p>
+            Check out more of my work on
+            <a href="https://github.com/praveen-ramasamy" target="_blank">GitHub</a> and connect with me on
+            <a href="https://www.linkedin.com/in/praveen-ramasamy/" target="_blank">LinkedIn</a>.
+        </p>
+    </div>
+</body>
+
+
+<!-- JS -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = document.getElementById('customModal');
+        var closeButton = document.getElementById('closeModal');
+        var chatbotIcon = document.getElementById('chatbotIcon');
+
+        chatbotIcon.addEventListener('click', function () {
+            modal.style.display = 'block';
+            chatbotIcon.style.display = 'none'; // Hide the chatbot icon
+        });
+
+        closeButton.addEventListener('click', function () {
+            modal.style.display = 'none';
+            chatbotIcon.style.display = 'block'; // Show the chatbot icon
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.id == 'sendMessageBtn') {
+            sendMessage();
+        }
+    });
+
+    // Handle the Enter key press event
+    document.getElementById('messageInput').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent the default action of the Enter key
+            sendMessage();
+        }
+    });
+
+    function sendMessage() {
+        var messageValue = document.getElementById('messageInput').value.trim();
+        if (messageValue !== "") {
+            var layout = '<div class="message sender">' +
+                '<div class="message-content">' +
+                '<span style="text-align: left;">' + messageValue + '</span>' +
+                '</div>' +
+                '</div>';
+            document.getElementById('chatbox').insertAdjacentHTML('beforeend', layout);
+            document.getElementById('messageInput').value = '';
+            scrollToBottom();
+        }
+    }
+
+    function scrollToBottom() {
+        var scrollableDiv = document.getElementById('chatbox');
+        scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+    }
+</script>
+
+</html>
