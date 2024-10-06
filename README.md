@@ -11,10 +11,6 @@ This project is a simple, responsive chatbot user interface designed with HTML, 
 - **Simple Message UI**: Clean design for sender and receiver messages.
 - **Promotion Section**: Added links to my GitHub and LinkedIn profiles for further connection and support.
 
-## Demo
-
-You can see the chatbot in action here: [Demo Link](#)
-
 ## How to Use
 
 1. Clone the repository:
